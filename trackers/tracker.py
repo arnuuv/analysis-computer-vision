@@ -68,3 +68,18 @@ class Tracker:
             with open(stub_path, 'wb') as f:
                 pickle.dump(tracks, f)
         return tracks
+    
+    def draw_annotations(self,video_frames,tracks):
+        output_video_frames = [] 
+        for frame_num, frame in enumerate(video_frames):
+            frame = frame.copy()
+            
+            player_dict = tracks["players"][frame_num]
+            ball_dict = tracks["ball"][frame_num]
+            player_dict = tracks["referees"][frame_num]
+            
+            #draw players
+            for track_id, player in player_dict.items():
+                frame = self.draw_ellipse(frame,player["bbox"], (0,0,255), track_id)
+            
+            
