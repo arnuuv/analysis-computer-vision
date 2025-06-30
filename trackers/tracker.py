@@ -5,6 +5,7 @@ import pickle
 import cv2
 from analysis_computer_vision.utils import get_center_of_bbox, get_bbox_width
 import numpy as np
+import pandas as pd
 class Tracker:
     def __init__(self, model_path):
         self.model = YOLO(model_path)
@@ -124,7 +125,8 @@ class Tracker:
             # Draw players (red ellipse with track_id)
             player_dict = tracks["players"][frame_num]
             for track_id, player in player_dict.items():
-                frame = self.draw_ellipse(frame, player["bbox"], (0,0,255), track_id)
+                color =player.get("team color",(0,0,255))
+                frame = self.draw_ellipse(frame, player["bbox"], color, track_id)
             
             # Draw referees (yellow ellipse with track_id)
             referee_dict = tracks["referees"][frame_num]
@@ -139,3 +141,15 @@ class Tracker:
             output_video_frames.append(frame)
         
         return output_video_frames
+    
+    def interpolate_ball_positions(self,ball_positions):
+        ball_positions = [x.get(1,{}).get('bbox',[]) for x in ball_positions]
+        df_ball_positions = pd.DataFrame(ball_positions,columns=['x1','y1','x2','y2'])
+        
+        #interpolate missing values
+        df_ball_positions = df_ball_positions.interpolate()
+        df_ball_positions = df_ball_positions.bfill()
+        ball_positions = [{1:{'bbox':x}} for x in df_ball_positions.to_numpy().tolist()]
+        return ball_positions
+    
+    
