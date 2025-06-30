@@ -11,15 +11,27 @@ runs/detect/predict2/08fd33_4.mp4
 models/best.pt
 models/last.pt
 
+# Ignore model weights
+models/*.pt
 
+# Ignore output videos
+output_videos/*.avi
 
+# Ignore runs and training outputs
+runs/
+training/
 
+# Ignore stub files
+stub/
+stubs/
 
+# Ignore __pycache__
+__pycache__/
 
-
+# Ignore system files
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
 *.py[codz]
 *$py.class
 
