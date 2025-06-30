@@ -2,10 +2,9 @@ from ultralytics import YOLO
 import supervision as sv
 import os
 import pickle
-import sys
-sys.path.append('../')
-from utils import get_center_of_bbox, get_bbox_width
 import cv2
+from analysis_computer_vision.utils import get_center_of_bbox, get_bbox_width
+
 class Tracker:
     def __init__(self, model_path):
         self.model = YOLO(model_path)
@@ -80,9 +79,14 @@ class Tracker:
             frame,
             center=(x_center,y2),
             axes=(int(width),int(0.35*width)),
-            
+            angle=0,
+            startAngle=45,
+            endAngle=235,
+            color = color,
+            thickness=2,
+            lineType=cv2.LINE_4
         )
-
+        return frame
     
     
     def draw_annotations(self,video_frames,tracks):
@@ -91,11 +95,10 @@ class Tracker:
             frame = frame.copy()
             
             player_dict = tracks["players"][frame_num]
-            ball_dict = tracks["ball"][frame_num]
-            player_dict = tracks["referees"][frame_num]
-            
-            #draw players
+            # Only draw red circles for players
             for track_id, player in player_dict.items():
-                frame = self.draw_ellipse(frame,player["bbox"], (0,0,255), track_id)
+                frame = self.draw_ellipse(frame, player["bbox"], (0,0,255), track_id)
             
+            output_video_frames.append(frame)
             
+        return output_video_frames
