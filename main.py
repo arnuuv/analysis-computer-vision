@@ -27,7 +27,12 @@ def main():
       tracks['players'][frame_num][player_id]['team'] = team
       tracks['players'][frame_num][player_id]['team color'] = team_assigner.team_colors[team]
     
-    
+  #Assign ball acquisition 
+  player_assigner = PlayerBallAssigner()
+  
+  for frame_num,player_track in enumerate(tracks['players']):
+    ball_bbox = tracks['ball'][frame_num][1]['bbox']
+    assigned_player = player_assigner.assign_player_ball_to_player(player_track,ball_bbox)
     
   #Draw output
   ##Draw object tracks
