@@ -134,13 +134,21 @@ class Tracker:
         
         team_ball_control_till_frame = team_ball_control[:frame_num+1]
         #get number of times each team had the ball 
-        team_1_num_frames = team_ball_control_till_frame[team_ball_control_till_frame==0].shape[0]
-        team_2_num_frames = team_ball_control_till_frame[team_ball_control_till_frame==0].shape[0]
-        team_1= team_1_num_frames/(team_1_num_frames+team_2_num_frames)
-        team_2 = team_2_num_frames/(team_1_num_frames+team_2_num_frames)
+        team_1_num_frames = np.sum(team_ball_control_till_frame == 1)
+        team_2_num_frames = np.sum(team_ball_control_till_frame == 2)
         
-        cv2.putText(frame,f"Team 1 ball control: {team_1*100:.2f}%",(1400,900),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,0),3)
-        cv2.putText(frame,f"Team 2 ball control: {team_2*100:.2f}%",(1400,950),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,0),3)
+        total_frames = team_1_num_frames + team_2_num_frames
+        
+        # Avoid division by zero
+        if total_frames == 0:
+            team_1_percentage = 50.0
+            team_2_percentage = 50.0
+        else:
+            team_1_percentage = (team_1_num_frames / total_frames) * 100
+            team_2_percentage = (team_2_num_frames / total_frames) * 100
+        
+        cv2.putText(frame,f"Team 1 ball control: {team_1_percentage:.2f}%",(1400,900),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,0),3)
+        cv2.putText(frame,f"Team 2 ball control: {team_2_percentage:.2f}%",(1400,950),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,0),3)
         return frame
         
     def draw_annotations(self, video_frames, tracks, team_ball_control):
