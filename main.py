@@ -3,6 +3,8 @@ from analysis_computer_vision.trackers import Tracker
 import cv2
 from analysis_computer_vision.team_assigner.team_assigner import TeamAssigner
 from analysis_computer_vision.player_ball_assigner.player_ball_assigner import PlayerBallAssigner
+import numpy as np
+
 
 def main():
   #Read the video
@@ -39,7 +41,9 @@ def main():
       
     else:
       team_ball_control.append(team_ball_control[-1])
-      
+  
+  # Convert to numpy array after the loop is complete
+  team_ball_control = np.array(team_ball_control)
       
       
       
