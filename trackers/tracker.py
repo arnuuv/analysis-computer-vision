@@ -104,17 +104,16 @@ class Tracker:
             cv2.putText(frame, f"{track_id}", (int(x1_text), int(y1_rect)), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,0,0), 2)
         return frame
     
-    def draw_triangle(self,frame,bbox,color):
-        y =int(bbox[1])
-        x,_=get_center_of_bbox(bbox)
+    def draw_triangle(self, frame, bbox, color, offset=0):
+        y = int(bbox[1]) - offset
+        x, _ = get_center_of_bbox(bbox)
         triangle_points = np.array([
-            [x,y],
-            [x-10,y-20],
-            [x+10,y-20]
+            [x, y],
+            [x-10, y-20],
+            [x+10, y-20]
         ])
         cv2.drawContours(frame, [triangle_points], 0, color, cv2.FILLED)
         cv2.drawContours(frame, [triangle_points], 0, (0,0,0), 2)
-        
         return frame
         
     def draw_annotations(self, video_frames, tracks):
@@ -129,7 +128,7 @@ class Tracker:
                 frame = self.draw_ellipse(frame, player["bbox"], color, track_id)
                 
                 if player.get('has_ball',False):
-                    frame = self.draw_triangle(frame, player["bbox"], (0,0,255))
+                    frame = self.draw_triangle(frame, player["bbox"], (0,0,255), offset=30)
             
             # Draw referees (yellow ellipse with track_id)
             referee_dict = tracks["referees"][frame_num]
