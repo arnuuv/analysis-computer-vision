@@ -2,7 +2,7 @@ from analysis_computer_vision.utils import read_video, save_video
 from analysis_computer_vision.trackers import Tracker
 import cv2
 from analysis_computer_vision.team_assigner.team_assigner import TeamAssigner
-
+from analysis_computer_vision.player_ball_assigner.player_ball_assigner import PlayerBallAssigner
 
 def main():
   #Read the video
