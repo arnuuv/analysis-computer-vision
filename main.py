@@ -4,6 +4,7 @@ import cv2
 from analysis_computer_vision.team_assigner.team_assigner import TeamAssigner
 from analysis_computer_vision.player_ball_assigner.player_ball_assigner import PlayerBallAssigner
 from analysis_computer_vision.camera_movement_estimator import CameraMovementEstimator
+from analysis_computer_vision.view_transformer import ViewTransformer
 import numpy as np
 
 
@@ -17,17 +18,16 @@ def main():
   
   #get object positions
   tracker.add_position_to_tracks(tracks)
-  
-  
-  
-  
+
   
   #camera movement estimator 
   camera_movement_estimator = CameraMovementEstimator(video_frames[0])
   camera_movement = camera_movement_estimator.get_camera_movement(video_frames,read_from_stub=True,stub_path='analysis_computer_vision/stub/camera_movement_stub.pkl')
   camera_movement_estimator.add_adjust_positions_to_tracks(tracks, camera_movement)
   
-  
+  #view transformer
+  view_transformer = ViewTransformer(video_frames[0])
+  view_transformer.add_transformed_position_to_tracks(tracks)
   
   
   #interpolate ball positions
