@@ -14,6 +14,14 @@ def main():
   #initialize tracker
   tracker = Tracker('analysis_computer_vision/models/best.pt')
   tracks = tracker.get_object_tracks(video_frames, read_from_stub=True, stub_path='analysis_computer_vision/stub/track_stubs.pkl')
+  
+  #get object positions
+  tracker.add_position_to_tracks(tracks)
+  
+  
+  
+  
+  
   #camera movement estimator 
   camera_movement_estimator = CameraMovementEstimator(video_frames[0])
   camera_movement = camera_movement_estimator.get_camera_movement(video_frames,read_from_stub=True,stub_path='analysis_computer_vision/stub/camera_movement_stub.pkl')
