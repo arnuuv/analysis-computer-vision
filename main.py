@@ -5,18 +5,18 @@ from analysis_computer_vision.team_assigner.team_assigner import TeamAssigner
 from analysis_computer_vision.player_ball_assigner.player_ball_assigner import PlayerBallAssigner
 from analysis_computer_vision.camera_movement_estimator import CameraMovementEstimator
 from analysis_computer_vision.view_transformer import ViewTransformer
+from analysis_computer_vision.speed_and_distance_estimator.speed_and_distance_estimator import SpeedAndDistance_Estimator
 import numpy as np
 
 
 def main():
-  #Read the video
   video_frames = read_video("analysis_computer_vision/input_videos/08fd33_4.mp4")
 
   #initialize tracker
   tracker = Tracker('analysis_computer_vision/models/best.pt')
   tracks = tracker.get_object_tracks(video_frames, read_from_stub=True, stub_path='analysis_computer_vision/stub/track_stubs.pkl')
   
-  #get object positions
+  #get obj positions
   tracker.add_position_to_tracks(tracks)
 
   
@@ -33,7 +33,9 @@ def main():
   #interpolate ball positions
   tracks['ball'] = tracker.interpolate_ball_positions(tracks['ball'])
   
-  
+  #speed and distance estimator
+  speed_and_distance_estimator = SpeedAndDistance_Estimator()
+  speed_and_distance_estimator.add_speed_and_distance_to_tracks(tracks) 
       
   #assign player teams
   team_assigner = TeamAssigner()
@@ -69,7 +71,8 @@ def main():
   #draw camera movement
   output_video_frames = camera_movement_estimator.draw_camera_movement(output_video_frames, camera_movement)
   
-  
+  #draw speed and distance
+  speed_and_distance_estimator.draw_speed_and_distance(output_video_frames,tracks)
   
   
   
